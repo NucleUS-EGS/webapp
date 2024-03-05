@@ -23,16 +23,36 @@ pip3 install -r requirements.txt
 docker-compose -f database.yml up -d
 ```
 
-4. Run the migrations
+4. Create a `.env` file with the information of the database
+
+```bash
+DB_NAME=db_name
+DB_USER=db_user
+DB_PASSWORD=db_password
+DB_HOST=db_host
+DB_PORT=db_port
+```
+
+5. Run the migrations
 
 ```bash
 python3 manage.py migrate
 ```
 
-5. Run the server
+6. Run the server
 
 ```bash
+set -a # export all variables
+source .env
+set +a
 python3 manage.py runserver
+```
+
+or
+
+```bash
+chmod +x run.sh
+./run.sh
 ```
 
 The **web app** should be running at `http://localhost:8000/`.  
