@@ -23,7 +23,7 @@ urlpatterns = [
     path('django/admin/', admin.site.urls),
     
     # api
-	path('api/', include('api.urls')),
+	path('api/v1/', include('api.urls')),
 	
     path('', views.callback, name='callback')
 ]

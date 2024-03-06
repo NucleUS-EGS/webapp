@@ -26,11 +26,15 @@ docker-compose -f database.yml up -d
 4. Create a `.env` file with the information of the database
 
 ```bash
+# DATABASE
 DB_NAME=db_name
 DB_USER=db_user
 DB_PASSWORD=db_password
 DB_HOST=db_host
 DB_PORT=db_port
+
+# SERVICES
+AUTH_SERVICE_URL=http://localhost:3000
 ```
 
 5. Run the migrations

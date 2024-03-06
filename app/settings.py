@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 	
     'corsheaders',
 	'rest_framework',
-	'rest_framework.authtoken',
     'drf_yasg',
     
     'api',
@@ -52,10 +51,10 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication'
+        'api.auth.CustomAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
+        'api.auth.CustomPermission'
     ]
 }
 

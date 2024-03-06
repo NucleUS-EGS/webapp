@@ -22,4 +22,5 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 	path('auth/', views.auth, name='auth'),
+	path('auth/in/', views.signedin, name='signedin')
 ]
