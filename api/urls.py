@@ -21,6 +21,17 @@ urlpatterns = [
     re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
+	# login
 	path('auth/', views.auth, name='auth'),
-	path('auth/in/', views.signedin, name='signedin')
+	path('auth/in', views.signedin, name='signedin'),
+
+	# events
+	path('events/', views.events, name='events'),
+	path('events/<int:event_id>', views.events_edit, name='events'),
+
+	# points
+	path('points/', views.points, name='points'),
+
+	# standings
+	path('standings/', views.standings, name='standings'),
 ]

@@ -24,6 +24,4 @@ urlpatterns = [
     
     # api
 	path('api/v1/', include('api.urls')),
-	
-    path('', views.callback, name='callback')
 ]
