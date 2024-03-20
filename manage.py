@@ -5,6 +5,19 @@ import sys
 
 
 def main():
+    # load environment variables
+    if os.path.exists('.env'):
+        if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+            print('Importing environment from .env...')
+        
+            for line in open('.env'):
+                var = line.strip().split('=')
+                if len(var) == 2:
+                    os.environ.setdefault(var[0], var[1])
+    else:
+        print('No .env file found')
+        sys.exit(1)
+
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
     try:

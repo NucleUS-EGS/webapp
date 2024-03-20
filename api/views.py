@@ -11,19 +11,28 @@ from drf_yasg.utils import swagger_auto_schema
 import requests
 import os
 
-@api_view(['GET'])
-@permission_classes((AllowAny,))
-@csrf_exempt
-def auth(request):
-	# redirect to the auth page
-	AUTH_SERVICE_URL = f'{os.environ.get("AUTH_SERVICE_URL")}/v1/signin'
-	return HttpResponseRedirect(AUTH_SERVICE_URL)
+import app.settings as settings
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 @csrf_exempt
-def signedin(request):
-	pass
+def auth(request):
+	url = f'{settings.AUTH_SERVICE_URL}/v1/auth'
+	return HttpResponseRedirect(url)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def user(request):
+	token = request.headers.get('Authorization')
+	url = f'{settings.AUTH_SERVICE_URL}/v1/user'
+	response = requests.get(url, headers={
+		'API-Key': settings.AUTH_SERVICE_KEY,
+		'Authorization': token
+	})
+	return Response(response.json(), status=response.status_code)
+
 
 @swagger_auto_schema(method='get', manual_parameters=[
     openapi.Parameter('query', openapi.IN_QUERY, description='Query string', type=openapi.TYPE_STRING),
@@ -35,42 +44,53 @@ def signedin(request):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def events(request):
-	EVENTS_SERVICE_URL = f'{os.environ.get("EVENTS_SERVICE_URL")}/v1/events'
+	url = f'{settings.EVENTS_SERVICE_URL}/v1/events'
 	if request.method == 'GET':
-		response = requests.get(EVENTS_SERVICE_URL, params=request.query_params)
+		response = requests.get(url, params=request.query_params, headers={
+			'API-Key': settings.EVENTS_SERVICE_KEY
+		})
 		return Response(response.json(), status=response.status_code)
 	
 @api_view(['POST', 'PATCH', 'DELETE'])
 @permission_classes((IsAuthenticatedOrReadOnly,))
 @csrf_exempt
 def events_edit(request, event_id):
-	EVENTS_SERVICE_URL = f'{os.environ.get("EVENTS_SERVICE_URL")}/v1/events/{event_id}'
+	url = f'{settings.EVENTS_SERVICE_URL}/v1/events/{event_id}'
+	headers = {
+		'API-Key': settings.EVENTS_SERVICE_KEY,
+	}
 	if request.method == 'POST':
-		response = requests.post(EVENTS_SERVICE_URL, data=request.data)
+		response = requests.post(url, data=request.data, headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'PATCH':
-		response = requests.patch(EVENTS_SERVICE_URL, data=request.data)
+		response = requests.patch(url, data=request.data, headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'DELETE':
-		response = requests.delete(EVENTS_SERVICE_URL)
+		response = requests.delete(url, headers=headers)
 		return Response(response.json(), status=response.status_code)
+
 
 @api_view(['GET', 'PATCH'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def points(request):
-	POINTS_SERVICE_URL = f'{os.environ.get("POINTS_SERVICE_URL")}/v1/points'
+	url = f'{settings.POINTS_SERVICE_URL}/v1/points'
+	headers = {
+		'API-Key': settings.POINTS_SERVICE_KEY,
+	}
 	if request.method == 'GET':
-		response = requests.get(POINTS_SERVICE_URL, params=request.query_params)
+		response = requests.get(url, params=request.query_params, headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'PATCH':
-		response = requests.patch(POINTS_SERVICE_URL, data=request.data)
+		response = requests.patch(url, data=request.data, headers=headers)
 		return Response(response.json(), status=response.status_code)
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def standings(request):
-	STANDINGS_SERVICE_URL = f'{os.environ.get("POINTS_SERVICE_URL")}/v1/standings'
-	response = requests.get(STANDINGS_SERVICE_URL)
+	url = f'{settings.POINTS_SERVICE_URL}/v1/standings'
+	response = requests.get(url, headers={
+		'API-Key': settings.POINTS_SERVICE_KEY
+	})
 	return Response(response.json(), status=response.status_code)

@@ -35,27 +35,23 @@ DB_PORT=db_port
 
 # SERVICES
 AUTH_SERVICE_URL=http://localhost:3001
+AUTH_SERVICE_KEY=auth_service_key
 EVENT_SERVICE_URL=http://localhost:3002
+EVENT_SERVICE_KEY=event_service_key
 POINTS_SERVICE_URL=http://localhost:3003
+POINTS_SERVICE_KEY=points_service_key
 ```
 
 5. Run the migrations
 
 ```bash
-set -a; source .env; set +a; python3 manage.py migrate
+python3 manage.py migrate
 ```
 
 6. Run the server
 
 ```bash
-set -a; source .env; set +a; python3 manage.py runserver 3000
-```
-
-or
-
-```bash
-chmod +x run.sh
-./run.sh
+python3 manage.py runserver 3000
 ```
 
 The **web app** should be running at `http://localhost:3000/`.  

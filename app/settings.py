@@ -17,6 +17,13 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Environment variables
+AUTH_SERVICE_URL = os.environ.get('AUTH_SERVICE_URL')
+AUTH_SERVICE_KEY = os.environ.get('AUTH_SERVICE_KEY')
+EVENTS_SERVICE_URL = os.environ.get('EVENTS_SERVICE_URL')
+EVENTS_SERVICE_KEY = os.environ.get('EVENTS_SERVICE_KEY')
+POINTS_SERVICE_URL = os.environ.get('POINTS_SERVICE_URL')
+POINTS_SERVICE_KEY = os.environ.get('POINTS_SERVICE_KEY')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/

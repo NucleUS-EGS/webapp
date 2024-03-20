@@ -23,7 +23,9 @@ urlpatterns = [
 
 	# login
 	path('auth/', views.auth, name='auth'),
-	path('auth/in', views.signedin, name='signedin'),
+
+	# user info
+	path('user/', views.user, name='user'),
 
 	# events
 	path('events/', views.events, name='events'),
