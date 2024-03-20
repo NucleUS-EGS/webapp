@@ -1,15 +1,14 @@
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema 
+from drf_yasg.inspectors import BaseInspector, SwaggerAutoSchema
 
 import requests
-import os
 
 import app.settings as settings
 
