@@ -51,4 +51,7 @@ urlpatterns = [
 	
     # dummy endpoint to help swagger generate the schema
     path('api/skip', skip, name='skip'),
+
+    # frontend
+    path('', include('frontend.urls')),
 ]

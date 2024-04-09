@@ -1,0 +1,110 @@
+.search {
+	width: 500px;
+    margin: auto;
+    padding: 40px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 10px;
+	
+}
+
+.search > .title {
+    font-size: 20px;
+    padding: 0px 5px;
+    font-weight: 700;
+}
+
+.search > .selector {
+	display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.search > .selector > div {
+	border: 1px solid var(--light-gray);
+    border-radius: 5px;
+}
+
+.search .input {
+    display: flex;
+    align-items: center;
+}
+
+.search .input > input {
+    height: 35px;
+    border: unset;
+    width: 100%;
+    font-size: 15px;
+    padding-left: 10px;
+}
+
+.search .input > .material-symbols-outlined {
+	font-size: 15px;
+    margin: 0 10px;
+    color: gray;
+}
+
+.search .results {
+    min-height: 200px;
+}
+
+.search .results > .result {
+    border-bottom: 1px solid var(--light-gray);
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    background-color: white;
+    padding: 5px;
+	cursor: pointer;
+}
+
+.search .results > .result:hover, .search .results > .result.active{
+    background-color: #6882bb;
+	color: white;
+}
+
+.search .results > .result > .logo {
+	background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.search .results > .result > .logo img {
+	width: 30px;
+	padding: 3px;
+}
+
+.search .buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	column-gap: 10px;
+	row-gap: 10px;
+}
+
+.search .buttons > div {
+	text-align: center;
+	border: 1px solid var(--light-gray);
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    height: 40px;
+    display: grid;
+    align-items: center;
+	font-weight: 700;
+}
+
+.search .buttons > .inactive {
+	background-color: var(--light-gray);
+	pointer-events: none;
+	color: #bdbdbd;
+	font-weight: unset;
+}
+
+.search .buttons > div:not(.inactive):hover {
+	background-color: var(--primary-yellow) !important;
+	color: white !important;
+}

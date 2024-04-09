@@ -18,4 +18,7 @@ urlpatterns = [
 
 	# standings
 	path('standings/', views.standings, name='standings'),
+
+	# institutions
+	path('institutions/', views.institutions, name='institutions'),
 ]

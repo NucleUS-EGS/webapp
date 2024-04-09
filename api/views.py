@@ -6,11 +6,13 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema 
-from drf_yasg.inspectors import BaseInspector, SwaggerAutoSchema
 
 import requests
 
 import app.settings as settings
+
+from .models import Institutions
+from django.forms.models import model_to_dict
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
@@ -93,3 +95,15 @@ def standings(request):
 		'API-Key': settings.POINTS_SERVICE_KEY
 	})
 	return Response(response.json(), status=response.status_code)
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def institutions(request):
+	query = request.query_params.get('q')
+	if query:
+		institutions = Institutions.objects.filter(name__icontains=query)
+	else:
+		institutions = Institutions.objects.all()
+
+	return Response([model_to_dict(institution) for institution in institutions])

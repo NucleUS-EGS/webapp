@@ -1,0 +1,28 @@
+:root {
+	--font-color: #535353;
+	--background-color: white;
+	--primary-yellow: #ffbf40;
+	--primary-blue: #1d419f;
+	--light-gray: #f1f1f1;
+}
+
+body {
+    font-family: 'Avenir LT Std', sans-serif;
+	background-color: var(--background-color);
+	color: var(--font-color);
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: var(--font-color);
+	text-decoration: none;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
