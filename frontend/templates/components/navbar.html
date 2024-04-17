@@ -1,13 +1,17 @@
 {% load static %}
 
 <div class="navbar">
-	<a href="." class="logo">
+	<a href="/" class="logo">
 		<img src="{% static 'images/nucleus-logo.png' %}" alt="">
 		<div><span>Nucle</span><span>US</span></div>
 	</a>
 	<div class="links">
-		<a href=".">Home</a>
-		<a href="standings">Classificações</a>
-		<a href="help">Ajuda</a>
+		{% if mail %}
+			<a href="/">Home</a>
+			<a href="/standings">Classificações</a>
+			<a href="/help">Ajuda</a>
+		{% else %}
+			<a href="/login">Entrar</a>
+		{% endif %}
 	</div>
 </div>

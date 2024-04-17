@@ -8,19 +8,24 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema 
 
 import requests
+import base64 
 
 import app.settings as settings
 
-from .models import Institutions
+from .models import Institution, Nucleo
 from django.forms.models import model_to_dict
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def auth(request):
-	url = f'{settings.AUTH_SERVICE_URL}/v1/auth'
-	return HttpResponseRedirect(url)
-
+	encoded_key = base64.b64encode(settings.AUTH_SERVICE_KEY.encode("utf-8")).decode("utf-8")
+	mode = request.query_params.get('mode')
+	if mode:
+		url = f'{settings.AUTH_SERVICE_URL}/v1/{mode}?token={encoded_key}&institution={request.query_params.get("institution")}'
+		return HttpResponseRedirect(f'{url}')
+	else:
+		return Response({'error': 'Missing mode parameter'}, status=400)
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
@@ -29,7 +34,7 @@ def user(request):
 	token = request.headers.get('Authorization')
 	url = f'{settings.AUTH_SERVICE_URL}/v1/user'
 	response = requests.get(url, headers={
-		'API-Key': settings.AUTH_SERVICE_KEY,
+		'API_KEY': settings.AUTH_SERVICE_KEY,
 		'Authorization': token
 	})
 	return Response(response.json(), status=response.status_code)
@@ -48,7 +53,7 @@ def events(request):
 	url = f'{settings.EVENTS_SERVICE_URL}/v1/events'
 	if request.method == 'GET':
 		response = requests.get(url, params=request.query_params, headers={
-			'API-Key': settings.EVENTS_SERVICE_KEY
+			'API_KEY': settings.EVENTS_SERVICE_KEY
 		})
 		return Response(response.json(), status=response.status_code)
 	
@@ -58,7 +63,7 @@ def events(request):
 def events_edit(request, event_id):
 	url = f'{settings.EVENTS_SERVICE_URL}/v1/events/{event_id}'
 	headers = {
-		'API-Key': settings.EVENTS_SERVICE_KEY,
+		'API_KEY': settings.EVENTS_SERVICE_KEY,
 	}
 	if request.method == 'POST':
 		response = requests.post(url, data=request.data, headers=headers)
@@ -77,7 +82,7 @@ def events_edit(request, event_id):
 def points(request):
 	url = f'{settings.POINTS_SERVICE_URL}/v1/points'
 	headers = {
-		'API-Key': settings.POINTS_SERVICE_KEY,
+		'API_KEY': settings.POINTS_SERVICE_KEY,
 	}
 	if request.method == 'GET':
 		response = requests.get(url, params=request.query_params, headers=headers)
@@ -92,7 +97,7 @@ def points(request):
 def standings(request):
 	url = f'{settings.POINTS_SERVICE_URL}/v1/standings'
 	response = requests.get(url, headers={
-		'API-Key': settings.POINTS_SERVICE_KEY
+		'API_KEY': settings.POINTS_SERVICE_KEY
 	})
 	return Response(response.json(), status=response.status_code)
 
@@ -102,8 +107,21 @@ def standings(request):
 def institutions(request):
 	query = request.query_params.get('q')
 	if query:
-		institutions = Institutions.objects.filter(name__icontains=query)
+		institutions = Institution.objects.filter(name__icontains=query)
 	else:
-		institutions = Institutions.objects.all()
+		institutions = Institution.objects.all()
 
 	return Response([model_to_dict(institution) for institution in institutions])
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def nucleos(request):
+	institution = request.query_params.get('institution')
+	if institution:
+		nucleos = Nucleo.objects.filter(institution__id=institution)
+	else:
+		nucleos = Nucleo.objects.all()
+	
+	return Response([model_to_dict(nucleo) for nucleo in nucleos])

@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Register</title>
+
+	{% include 'components/head.html' %}
+	
+	<link rel="stylesheet" href="{% static 'css/login.css' %}">
+	
+	<script src="{% static 'js/login.js' %}"></script>
+</head>
+<body>
+	{% include 'components/navbar.html' %}
+
+	<div>
+		<form class="auth-container" method="post" action=".">
+			<div class="auth-wrapper">
+				<div class="welcome">Bem vindo {{ mail }}</div>
+				<div class="title">Escolhe o teu núcleo</div>
+				<div class="selector">
+					<div class="results">
+						{% for nucleo in nucleos %}
+							<div class="result" title="{{ nucleo.name }}" onclick="select(this)">
+								<div class="logo"><img src="{% static nucleo.logo %}" alt=""></div>
+								<div>{{ nucleo.short }}</div>
+								<input type="hidden" value="{{ nucleo.id }}">
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			<div class="buttons" style="grid-template-columns: unset;">
+				<input type="submit" class="inactive" value="Escolher">
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

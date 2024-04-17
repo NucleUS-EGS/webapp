@@ -19,6 +19,7 @@ urlpatterns = [
 	# standings
 	path('standings/', views.standings, name='standings'),
 
-	# institutions
+	# internal
 	path('institutions/', views.institutions, name='institutions'),
+	path('nucleos/', views.nucleos, name='nucleos'),
 ]

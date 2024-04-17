@@ -17,23 +17,40 @@
 	{% include 'components/navbar.html' %}
 
 	<div>
-		<div class="search">
-			<div class="title">Instituição de Ensino</div>
-			<div class="selector">
+		<form class="auth-container" method="post" action=".">
+			<div id="nucleo-signin" class="auth-wrapper">
+				<div class="title">Entrar como Núcleo</div>
 				<div class="input">
 					<span class="material-symbols-outlined">
-						search
-						</span>
-					<input type="text" placeholder="Nome da Instituição" oninput="search(this.value)">
+						email
+					</span>
+					<input type="email" name="email" placeholder="Email">
 				</div>
-				<div class="results">
+				<div class="input">
+					<span class="material-symbols-outlined">
+						lock
+					</span>
+					<input type="password" name="password" placeholder="Senha">
+				</div>
+			</div>
+			<div class="auth-wrapper">
+				<div class="title">Instituição de Ensino</div>
+				<div class="selector">
+					<div class="input">
+						<span class="material-symbols-outlined">
+							search
+							</span>
+						<input type="text" placeholder="Nome da Instituição" oninput="search(this.value)">
+					</div>
+					<div class="results">
+					</div>
 				</div>
 			</div>
 			<div class="buttons">
-				<div class="inactive">Sign up</div>
-				<div class="idp inactive">ID Provider</div>
+				<input type="submit" class="inactive" value="Sign up">
+				<input type="submit" class="idp inactive" value="ID Provider">
 			</div>
-		</div>
+		</form>
 	</div>
 </body>
 </html>

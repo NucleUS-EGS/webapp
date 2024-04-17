@@ -1,0 +1,43 @@
+.main {
+	padding-left: 250px !important;
+}
+
+.sidebar {
+	background-color: var(--primary-blue);
+    color: white;
+    position: absolute;
+    height: 100%;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+}
+
+.sidebar > div {
+    border-bottom: 2px solid white;
+    padding: 40px 20px;
+}
+
+.sidebar .title, .sidebar .tabs {
+    font-weight: bold;
+}
+
+.sidebar .tabs {
+	text-align: center;
+    display: flex;
+    flex-direction: column;
+	padding: unset;
+}
+
+.sidebar .tabs > div {
+	padding: 20px 0;
+	cursor: pointer;
+}
+
+.sidebar .tabs > div > a {
+	color: white;
+}
+
+.sidebar .tabs > div:hover {
+	background-color: var(--primary-yellow);
+}
