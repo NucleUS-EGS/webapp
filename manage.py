@@ -2,18 +2,15 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import glob
 
+from dotenv import load_dotenv
 
 def main():
     # load environment variables
-    if os.path.exists('.env'):
+    if glob.glob('.env'):
         if 'DJANGO_SETTINGS_MODULE' not in os.environ:
-            print('Importing environment from .env...')
-        
-            for line in open('.env'):
-                var = line.strip().split('=')
-                if len(var) == 2:
-                    os.environ.setdefault(var[0], var[1])
+            load_dotenv()
     else:
         print('No .env file found')
         sys.exit(1)
