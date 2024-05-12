@@ -4,11 +4,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 import requests
 
+import logging
+logger = logging.getLogger(__name__)
+
 def check_login(request):
 	# get cookie value for AUTH_SERVICE_EMAIL
 	mail = request.COOKIES.get('AUTH_SERVICE_EMAIL', None)
 	step = request.COOKIES.get('AUTH_SERVICE_STEP', None)
-	return {'mail': mail, 'step': step}
+	id = request.COOKIES.get('AUTH_SERVICE_ID')
+	
+	return {'mail': mail, 'step': step, 'id': id}
 
 def index(request):
 	context = check_login(request)
@@ -18,7 +23,13 @@ def index(request):
 	
 	if 'step' in context and context['step'] == 'register':
 		return HttpResponseRedirect('/register')
+
+
+	context['points'] = points(request)
+	context['standings'] = standings(request)
+
 	
+	# get user id where email = mail
 	return render(request, 'index.html', context)
 	
 
@@ -77,4 +88,36 @@ def logout(request):
 	response.delete_cookie('AUTH_SERVICE_EMAIL')
 	response.delete_cookie('AUTH_SERVICE_STEP')
 	response.delete_cookie('AUTH_SERVICE_ACCESS_TOKEN')
+	response.delete_cookie('AUTH_SERVICE_ID')
 	return response
+
+
+def points(request):
+
+	id = request.COOKIES.get('AUTH_SERVICE_ID')
+	if id:
+		url = f'http://{request.get_host()}/api/v1/entity/?entity_id={id}'
+		response = requests.get(url).json()
+	
+		if response and isinstance(response, list) and len(response) > 0:
+			points = response[0].get('POINTS', 0)
+	
+		else:
+			points = 0
+
+
+		print(f"Points: {points} for user {id}")
+	else:
+		points = 0
+
+
+	return points
+
+def standings(request):
+
+	mail = request.COOKIES.get('AUTH_SERVICE_EMAIL', None)
+	step = request.COOKIES.get('AUTH_SERVICE_STEP', None)
+	user_points = points(request)
+	response = requests.get(f'http://{request.get_host()}/api/v1/standings').json()
+
+	return render(request, 'standings.html', {'standings': response, 'mail': mail, 'step': step, 'points': user_points})

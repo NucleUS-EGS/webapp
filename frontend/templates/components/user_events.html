@@ -1,0 +1,48 @@
+<div class="user_events">
+    <div class="container">
+        <div class="new-event">
+            <div class="content">
+                <span class="show">+</span>
+            </div>
+        </div>
+        <div class="new-event">
+            <div class="content">
+                <span>+</span>
+            </div>
+        </div>
+        <div class="new-event">
+            <div class="content">
+                <span>+</span>
+            </div>
+        </div>
+        <div class="new-event">
+            <div class="content">
+                <span>+</span>
+            </div>
+        </div>
+       
+        <!-- <div class="event">
+            
+        </div> -->
+    </div>
+    <div id="forms" style="display: none;">
+        <span>ola</span>
+    </div>
+</div>
+
+
+<!-- here for testing ONLY -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var show = document.querySelector('.show'); 
+        var forms = document.getElementById('forms'); 
+    
+        show.addEventListener('click', function() {
+            if (forms.style.display === 'none') {
+                forms.style.display = 'block'; 
+            } else {
+                forms.style.display = 'none';
+            }
+        });
+    });
+    </script>

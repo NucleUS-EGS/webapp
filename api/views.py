@@ -80,7 +80,13 @@ def events_edit(request, event_id):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def points(request):
-	url = f'{settings.POINTS_SERVICE_URL}/points'
+	url = f'{settings.POINTS_SERVICE_URL}/entity'
+
+	entity_id = request.query_params.get('entity_id', None)
+
+	if entity_id:
+		url = f'{url}?id={entity_id}'
+
 	headers = {
 		'API_KEY': settings.POINTS_SERVICE_KEY,
 	}

@@ -1,0 +1,19 @@
+<div class="standings">
+    <h1 class="title">Classificação Geral</h1>
+    <table class = "table">   
+            <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Núcleo</th>
+                <th>Pontos</th>
+            </tr>
+            {% for item in standings %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.ENTITY_ID }}</td>
+                <td>{{ item.TIPO_ID }}</td>
+                <td>{{ item.POINTS }}</td>
+            </tr>
+            {% endfor %}        
+    </table>
+</div>
