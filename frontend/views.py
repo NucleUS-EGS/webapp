@@ -10,10 +10,12 @@ logger = logging.getLogger(__name__)
 def check_login(request):
 	# get cookie value for AUTH_SERVICE_EMAIL
 	mail = request.COOKIES.get('AUTH_SERVICE_EMAIL', None)
+	username = request.COOKIES.get('AUTH_SERVICE_USERNAME', None)
 	step = request.COOKIES.get('AUTH_SERVICE_STEP', None)
 	id = request.COOKIES.get('AUTH_SERVICE_ID')
+	points = get_points(request)
 	
-	return {'mail': mail, 'step': step, 'id': id}
+	return {'mail': mail, 'username': username, 'step': step, 'id': id, 'points': points}
 
 def index(request):
 	context = check_login(request)
@@ -23,11 +25,6 @@ def index(request):
 	
 	if 'step' in context and context['step'] == 'register':
 		return HttpResponseRedirect('/register')
-
-
-	context['points'] = points(request)
-	context['standings'] = standings(request)
-
 	
 	# get user id where email = mail
 	return render(request, 'index.html', context)
@@ -91,8 +88,15 @@ def logout(request):
 	response.delete_cookie('AUTH_SERVICE_ID')
 	return response
 
+def standings(request):
+	context = check_login(request)
 
-def points(request):
+	context["standings"] = requests.get(f'http://{request.get_host()}/api/v1/standings').json()
+
+	return render(request, 'standings.html', context)
+
+
+def get_points(request):
 
 	id = request.COOKIES.get('AUTH_SERVICE_ID')
 	if id:
@@ -112,12 +116,3 @@ def points(request):
 
 
 	return points
-
-def standings(request):
-
-	mail = request.COOKIES.get('AUTH_SERVICE_EMAIL', None)
-	step = request.COOKIES.get('AUTH_SERVICE_STEP', None)
-	user_points = points(request)
-	response = requests.get(f'http://{request.get_host()}/api/v1/standings').json()
-
-	return render(request, 'standings.html', {'standings': response, 'mail': mail, 'step': step, 'points': user_points})

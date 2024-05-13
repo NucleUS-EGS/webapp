@@ -41,3 +41,28 @@
     font-weight: 900;
     color: var(--primary-blue);
 }
+
+
+/* forms editing */
+
+.user_events #forms {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    z-index: 2;
+    max-width: 600px; /* Maximum width of the form */
+    position: relative;
+}
+
+.user_events #forms .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    box-shadow: 0 10px 10px var(--light-gray);
+ 
+}
