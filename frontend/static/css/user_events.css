@@ -45,15 +45,14 @@
 
 /* forms editing */
 
-.user_events #forms {
-    display: flex;
+.user_events > #forms {
+    display: none;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    width: 100%;
-    z-index: 2;
-    max-width: 600px; /* Maximum width of the form */
-    position: relative;
+    width: 50%;
+    z-index: 1000 !important;
+    position: absolute !important;
+    background-color: white;
 }
 
 .user_events #forms .form {
@@ -62,7 +61,24 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     box-shadow: 0 10px 10px var(--light-gray);
- 
+    padding: 30px;
 }
+
+.user_events .title {
+    background-color: var(--primary-blue);
+    color: white;
+    display: flex;
+    font-weight: bold;
+}
+
+.user_events .title .yellow{
+    width: 45px;
+    background-color: var(--primary-yellow);
+}
+
+.user_events .title h1 {
+    padding-left: 15px;
+}
+
+
