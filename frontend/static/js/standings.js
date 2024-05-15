@@ -6,7 +6,7 @@ const search = input => {
 
 		if (input.length > 0) {
 			// make request to api
-			fetch(`http://localhost:3000/api/v1/institutions?q=${input}`)
+			fetch(`${window.location.origin}/api/v1/institutions?q=${input}`)
 				.then(response => response.json())
 				.then(data => {
 					data.forEach(item => {
