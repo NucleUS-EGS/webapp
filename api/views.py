@@ -22,7 +22,7 @@ def auth(request):
 	encoded_key = base64.b64encode(settings.AUTH_SERVICE_KEY.encode("utf-8")).decode("utf-8")
 	mode = request.query_params.get('mode')
 	if mode:
-		url = f'{settings.AUTH_SERVICE_URL}/{mode}?token={encoded_key}&institution={request.query_params.get("institution")}'
+		url = f'/{settings.AUTH_SERVICE_URL}/{mode}?token={encoded_key}&institution={request.query_params.get("institution")}'
 		return HttpResponseRedirect(f'{url}')
 	else:
 		return Response({'error': 'Missing mode parameter'}, status=400)
@@ -32,7 +32,7 @@ def auth(request):
 @csrf_exempt
 def user(request):
 	token = request.headers.get('Authorization')
-	url = f'{settings.AUTH_SERVICE_URL}/user'
+	url = f'/{settings.AUTH_SERVICE_URL}/user'
 	response = requests.get(url, headers={
 		'API_KEY': settings.AUTH_SERVICE_KEY,
 		'Authorization': token
