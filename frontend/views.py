@@ -4,8 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 import requests
 
-import logging
-logger = logging.getLogger(__name__)
+import app.settings as settings
+
+def build_url(request, service, path):
+	scheme = request.META.get('HTTP_X_FORWARDED_PROTO', 'http')
+	return f'{scheme}://{service}{path}'
 
 def check_login(request):
 	# get cookie value for AUTH_SERVICE_EMAIL
@@ -74,7 +77,7 @@ def register(request):
 			}
 			return HttpResponseRedirect(f'/api/v1/auth?mode=register')
 
-		nucleos = requests.get(f'http://{request.get_host()}/api/v1/nucleos?institution=2').json()
+		nucleos = requests.get(build_url(request, settings.API_URL, '/nucleos?institution=2')).json()
 		context['nucleos'] = nucleos
 		print(context)
 		return render(request, 'register.html', context)
@@ -91,7 +94,7 @@ def logout(request):
 def standings(request):
 	context = check_login(request)
 
-	context["standings"] = requests.get(f'http://{request.get_host()}/api/v1/standings').json()
+	context["standings"] = requests.get(build_url(request, settings.API_URL, '/standings')).json()
 
 	return render(request, 'standings.html', context)
 
@@ -100,7 +103,7 @@ def get_points(request):
 
 	id = request.COOKIES.get('AUTH_SERVICE_ID')
 	if id:
-		url = f'http://{request.get_host()}/api/v1/entity/?entity_id={id}'
+		url = build_url(request, settings.API_URL, f'/entity/?entity_id={id}')
 		response = requests.get(url).json()
 	
 		if response and isinstance(response, list) and len(response) > 0:

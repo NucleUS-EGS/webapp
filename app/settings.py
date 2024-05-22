@@ -18,6 +18,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment variables
+API_URL = os.environ.get('API_URL')
 AUTH_SERVICE_URL = os.environ.get('AUTH_SERVICE_URL')
 AUTH_SERVICE_KEY = os.environ.get('AUTH_SERVICE_KEY')
 EVENTS_SERVICE_URL = os.environ.get('EVENTS_SERVICE_URL')

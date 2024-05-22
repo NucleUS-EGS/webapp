@@ -9,11 +9,24 @@ from drf_yasg.utils import swagger_auto_schema
 
 import requests
 import base64 
+import re
 
 import app.settings as settings
 
 from .models import Institution, Nucleo
 from django.forms.models import model_to_dict
+
+
+def build_url_redirect(request, service, path):
+	scheme = request.META.get('HTTP_X_FORWARDED_PROTO', 'http')
+	host = request.META.get('HTTP_X_FORWARDED_HOST', 'localhost')
+	port = request.META.get('PORT', '8000')
+	service = re.sub(r':.*?/', '/', service)
+	return f'{scheme}://{host}:{port}/{service}{path}'
+
+def build_url(request, service, path):
+	scheme = request.META.get('HTTP_X_FORWARDED_PROTO', 'http')
+	return f'{scheme}://{service}{path}'
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
@@ -22,7 +35,8 @@ def auth(request):
 	encoded_key = base64.b64encode(settings.AUTH_SERVICE_KEY.encode("utf-8")).decode("utf-8")
 	mode = request.query_params.get('mode')
 	if mode:
-		url = f'/{settings.AUTH_SERVICE_URL}/{mode}?token={encoded_key}&institution={request.query_params.get("institution")}'
+		path = f'/{mode}?token={encoded_key}&institution={request.query_params.get("institution")}'
+		url = build_url_redirect(request, settings.AUTH_SERVICE_URL, path)
 		return HttpResponseRedirect(f'{url}')
 	else:
 		return Response({'error': 'Missing mode parameter'}, status=400)
@@ -32,7 +46,7 @@ def auth(request):
 @csrf_exempt
 def user(request):
 	token = request.headers.get('Authorization')
-	url = f'/{settings.AUTH_SERVICE_URL}/user'
+	url = build_url(request, settings.AUTH_SERVICE_URL, '/user')
 	response = requests.get(url, headers={
 		'API_KEY': settings.AUTH_SERVICE_KEY,
 		'Authorization': token
@@ -50,7 +64,7 @@ def user(request):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def events(request):
-	url = f'{settings.EVENTS_SERVICE_URL}/events'
+	url = build_url(request, settings.EVENTS_SERVICE_URL, '/events')
 	if request.method == 'GET':
 		response = requests.get(url, params=request.query_params, headers={
 			'API_KEY': settings.EVENTS_SERVICE_KEY
@@ -61,7 +75,7 @@ def events(request):
 @permission_classes((IsAuthenticatedOrReadOnly,))
 @csrf_exempt
 def events_edit(request, event_id):
-	url = f'{settings.EVENTS_SERVICE_URL}/events/{event_id}'
+	url = build_url(request, settings.EVENTS_SERVICE_URL, f'/events/{event_id}')
 	headers = {
 		'API_KEY': settings.EVENTS_SERVICE_KEY,
 	}
@@ -80,8 +94,7 @@ def events_edit(request, event_id):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def points(request):
-	url = f'{settings.POINTS_SERVICE_URL}/entity'
-
+	url = build_url(request, settings.POINTS_SERVICE_URL, '/entity')
 	entity_id = request.query_params.get('entity_id', None)
 
 	if entity_id:
@@ -101,7 +114,7 @@ def points(request):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def standings(request):
-	url = f'{settings.POINTS_SERVICE_URL}/standings'
+	url = build_url(request, settings.POINTS_SERVICE_URL, '/standings')
 	response = requests.get(url, headers={
 		'API_KEY': settings.POINTS_SERVICE_KEY
 	})
