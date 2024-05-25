@@ -94,6 +94,7 @@ def events_edit(request, event_id):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def points(request):
+	# v1//entity?id=1
 	url = build_url(request, settings.POINTS_SERVICE_URL, '/entity')
 	entity_id = request.query_params.get('entity_id', None)
 

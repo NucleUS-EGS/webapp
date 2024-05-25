@@ -57,8 +57,35 @@
     color: gray;
 }
 
+
 .auth-wrapper .results {
     min-height: 200px;
+    border: 1px solid var(--light-gray);
+}
+
+.auth-wrapper .results.scroll {
+    max-height: calc(5 * 56px);
+    overflow-y: auto;
+
+}
+
+.auth-wrapper .results::-webkit-scrollbar {
+    width: 15px; /* Width of the scrollbar */
+}
+
+.auth-wrapper .results::-webkit-scrollbar-track {
+    background: transparent; 
+    
+}
+
+.auth-wrapper .results::-webkit-scrollbar-thumb {
+    background: var(--light-gray);
+    border-radius: 15px; 
+}
+
+.auth-wrapper .results::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-yellow); /* Color on hover */
+    cursor: pointer;
 }
 
 .auth-wrapper .results > .result {
@@ -70,7 +97,8 @@
     font-size: 14px;
     background-color: white;
     padding: 5px;
-	cursor: pointer;
+    cursor: pointer;
+    height: 60px;
 }
 
 .auth-wrapper .results > .result:hover, .auth-wrapper .results > .result.active{

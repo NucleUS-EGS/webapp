@@ -77,7 +77,7 @@ def register(request):
 			}
 			return HttpResponseRedirect(f'/api/v1/auth?mode=register')
 
-		nucleos = requests.get(build_url(request, settings.API_URL, '/nucleos?institution=2')).json()
+		nucleos = requests.get(build_url(request, settings.API_URL, '/nucleos/?institution=1')).json()
 		context['nucleos'] = nucleos
 		print(context)
 		return render(request, 'register.html', context)

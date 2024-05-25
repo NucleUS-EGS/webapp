@@ -1,0 +1,12 @@
+INSERT INTO api_nucleo (name, short, logo, institution_id) 
+VALUES ('Núcleo de Estudantes de Biologia', 'NEB', '/images/nucleos/NEB.png', 1);
+INSERT INTO api_nucleo (name, short, logo, institution_id) 
+VALUES ('Núcleo de Estudantes de Gestão e Planeamento de Turismo', 'NEGPT', '/images/nucleos/NEGPT.png', 1);
+INSERT INTO api_nucleo (name, short, logo, institution_id) 
+VALUES ('Núcleo de Estudantes de PSICOLOGIA', 'NEP', '/images/nucleos/NEP.png', 1);
+INSERT INTO api_nucleo (name, short, logo, institution_id) 
+VALUES ('Núcleo de Estudantes de Tradução', 'NET', '/images/nucleos/NET.png', 1);
+INSERT INTO api_nucleo (name, short, logo, institution_id) 
+VALUES ('Núcleo de Estudantes de Quimica', 'NEQ', '/images/nucleos/NEQ.png', 1);
+INSERT INTO api_nucleo (name, short, logo, institution_id) 
+VALUES ('Núcleo de Estudantes de Materiais', 'NEM', '/images/nucleos/NEM.png', 1);
