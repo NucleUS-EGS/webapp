@@ -1,3 +1,6 @@
+INSERT INTO api_institution (name, logo, color, text)
+VALUES ('Universidade de Aveiro', '/images/ua-logo.png', '#92D400', 'UA ID Provider');
+
 INSERT INTO api_nucleo (name, short, logo, institution_id) 
 VALUES ('Núcleo de Estudantes de Biologia', 'NEB', '/images/nucleos/NEB.png', 1);
 INSERT INTO api_nucleo (name, short, logo, institution_id) 
@@ -9,4 +12,4 @@ VALUES ('Núcleo de Estudantes de Tradução', 'NET', '/images/nucleos/NET.png',
 INSERT INTO api_nucleo (name, short, logo, institution_id) 
 VALUES ('Núcleo de Estudantes de Quimica', 'NEQ', '/images/nucleos/NEQ.png', 1);
 INSERT INTO api_nucleo (name, short, logo, institution_id) 
-VALUES ('Núcleo de Estudantes de Materiais', 'NEM', '/images/nucleos/NEM.png', 1);
+VALUES ('Núcleo de Estudantes de Materiais', 'NEM', '/images/nucleos/NEM.jpg', 1);

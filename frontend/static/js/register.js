@@ -6,7 +6,7 @@ const search = input => {
 		results.innerHTML = '';
 
 		if (input.length > 0) {
-			// make request to api
+		
 			fetch(`${window.location.origin}/api/v1/institutions?q=${input}`)
 				.then(response => response.json())
 				.then(data => {
@@ -71,22 +71,5 @@ document.addEventListener('input', e => {
 			button.classList.add('inactive');
 		}
 	}
-
-	if (e.target.matches('input[name="email"], input[name="password"]')) {
-		const loginButton = document.querySelector('.buttons .login_nucleo');
-		if (e.target.value.length > 0) {
-			loginButton.classList.remove('inactive');
-			loginButton.style.backgroundColor = 'var(--light-gray)';
-			loginButton.style.color = '#000'; 
-		} else {
-			loginButton.classList.add('inactive');
-			loginButton.style.backgroundColor = ''; 
-			loginButton.style.color = ''; 
-		}
-	}
 });
 
-window.addEventListener('load', () => {
-	const uni = 'Universidade de Aveiro';
-	search(uni);
-});

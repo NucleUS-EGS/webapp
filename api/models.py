@@ -29,3 +29,8 @@ class Nucleo(models.Model):
 	short = models.CharField(max_length=255)
 	logo = models.CharField(max_length=255)
 	institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+
+class NucleoAuth(models.Model):
+	id = models.AutoField(primary_key=True)
+	mail = models.EmailField()
+	password = models.CharField(max_length=255)
