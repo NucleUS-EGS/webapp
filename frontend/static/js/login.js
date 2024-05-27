@@ -89,4 +89,8 @@ document.addEventListener('input', e => {
 window.addEventListener('load', () => {
 	const uni = 'Universidade de Aveiro';
 	search(uni);
+	
+	document.querySelector('input[name="email"]').value = '';
+	document.querySelector('input[name="password"]').value = '';
+
 });

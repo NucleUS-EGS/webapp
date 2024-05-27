@@ -1,29 +1,34 @@
 {% load static %}
 
 <div class="navbar">
-	<a href="/" class="logo">
-		<img src="{% static 'images/nucleus-logo.png' %}" alt="">
-		<div><span>Nucle</span><span>US</span></div>
-	</a>
-	<div class="links">
-		{% if mail %}
-			<a href="/">Home</a>
-			<a href="/standings">Classificações</a>
-			<a href="/help">Ajuda</a>
+    <a href="/" class="logo">
+        <img src="{% static 'images/nucleus-logo.png' %}" alt="">
+        <div><span>Nucle</span><span>US</span></div>
+    </a>
+    <div class="links">
+        {% if mail %}
 			{% if step == 'loggedin' %}
-			<div class="user">
-				<div class="points">
-					<img src="{% static 'images/nucleus-logo.png' %}" alt="">
-					<span> {{ points }} </span> <!-- Display the points here -->
-				</div>
-				<div class="profile">
-					<span>{{ username }}</span>
-				</div>
-			</div>
-			{% endif %}
-		{% else %}
-			<a href="/login">Entrar</a>
-		{% endif %}
-	</div>
+            <a href="/">Home</a>
+            <a href="/standings">Classificações</a>
+            <a href="/help">Ajuda</a>
+            <div class="user">
+                {% if nucleo %}
+                <div class="profile">
+                    <span>{{ nucleo }}</span>
+                </div>
+                {% else %}
+                <div class="points">
+                    <img src="{% static 'images/nucleus-logo.png' %}" alt="">
+                    <span>{{ points }}</span>
+                </div>
+                <div class="profile">
+                    <span>{{ mail }}</span>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% else %}
+            <a href="/login">Entrar</a>
+        {% endif %}
+    </div>
 </div>
-

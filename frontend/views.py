@@ -29,6 +29,10 @@ def index(request):
 	if 'step' in context and context['step'] == 'register':
 		return HttpResponseRedirect('/register')
 	
+
+	nucleo = request.COOKIES.get('NUCLEO', None)
+	if nucleo:
+		context['nucleo'] = nucleo
 	# get user id where email = mail
 	return render(request, 'index.html', context)
 	
@@ -46,11 +50,27 @@ def login(request):
 				'email': email,
 				'password': password
 			}
-			# send post request to auth service
-			# TODO
+			
+			# make post request with data
+			response = requests.post(build_url(request, settings.API_URL, '/nucleossignin/'), json=data)
+			print(response.status_code)
+			if response.status_code == 200:
+				response = response.json()
+				nucleo_email = response.get('email')
+				nucleo = nucleo_email.split('@')[0].upper()
 
-		institution = request.POST.get('institution')
-		return HttpResponseRedirect(f'/api/v1/auth?institution={institution}&mode=signin')
+				
+				response = HttpResponseRedirect('/')
+				response.set_cookie('AUTH_SERVICE_EMAIL', nucleo_email)
+				response.set_cookie('AUTH_SERVICE_STEP', 'loggedin')
+				response.set_cookie('NUCLEO', nucleo)
+				
+				return response
+			else:
+				return HttpResponseRedirect('/login')
+		else:
+			institution = request.POST.get('institution')
+			return HttpResponseRedirect(f'/api/v1/auth?institution={institution}&mode=signin')
 	else:
 		print(context)
 		if context['mail']:
@@ -70,15 +90,12 @@ def register(request):
 		return HttpResponseRedirect('/login')
 	else:
 		if request.method == 'POST':
-			nucleo = request.POST.get('nucleo')
-			# put in form data
-			data = {
-				'nucleo': nucleo
-			}
+			nucleo = get_nucleos(request)
+			
 			return HttpResponseRedirect(f'/api/v1/auth?mode=register')
 
-		nucleos = requests.get(build_url(request, settings.API_URL, '/nucleos/?institution=1')).json()
-		context['nucleos'] = nucleos
+		# nucleos = requests.get(build_url(request, settings.API_URL, '/nucleos')).json()
+		context['nucleos'] = get_nucleos(request)
 		print(context)
 		return render(request, 'register.html', context)
 	
@@ -89,6 +106,7 @@ def logout(request):
 	response.delete_cookie('AUTH_SERVICE_STEP')
 	response.delete_cookie('AUTH_SERVICE_ACCESS_TOKEN')
 	response.delete_cookie('AUTH_SERVICE_ID')
+	response.delete_cookie('NUCLEO') 
 	return response
 
 def standings(request):
@@ -117,5 +135,15 @@ def get_points(request):
 	else:
 		points = 0
 
-
 	return points
+
+
+# returns a list of all nucleos
+def get_nucleos(request):
+	url = build_url(request, settings.API_URL, f'/nucleos')
+	response = requests.get(url).json()
+	nucleos = response.get('nucleus', [])
+
+	return nucleos
+
+

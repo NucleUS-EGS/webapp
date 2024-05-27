@@ -11,10 +11,15 @@ import requests
 import base64 
 import re
 
+import logging
+from django.conf import settings
+from django.http import JsonResponse
+
 import app.settings as settings
 
-from .models import Institution, Nucleo
+from .models import Institution
 from django.forms.models import model_to_dict
+
 
 
 def build_url_redirect(request, service, path):
@@ -134,14 +139,33 @@ def institutions(request):
 	return Response([model_to_dict(institution) for institution in institutions])
 
 
+# get list of nucleos
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def nucleos(request):
-	institution = request.query_params.get('institution')
-	if institution:
-		nucleos = Nucleo.objects.filter(institution__id=institution)
-	else:
-		nucleos = Nucleo.objects.all()
-	
-	return Response([model_to_dict(nucleo) for nucleo in nucleos])
+	# make get request to auth service /nucleos
+	url = build_url(request, settings.AUTH_SERVICE_URL, '/nucleus')
+	response = requests.get(url, headers={
+		'API_KEY': settings.AUTH_SERVICE_KEY
+	})
+	return Response(response.json(), status=response.status_code)
+
+# post to create a new nucleo (sigin)
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def nucleossignin(request):
+
+	url = build_url(request, settings.AUTH_SERVICE_URL, '/signin')
+	response = requests.post(url, json=request.data, headers={
+		'API_KEY': settings.AUTH_SERVICE_KEY,
+		'Content-Type': 'application/json'
+	})
+	content_type = response.headers.get('Content-Type', '')
+
+	if 'application/json' in content_type:
+		response_data = response.json()
+
+	return Response(response_data, status=response.status_code)
+    

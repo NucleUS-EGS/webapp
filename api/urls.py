@@ -21,5 +21,11 @@ urlpatterns = [
 
 	# internal
 	path('institutions/', views.institutions, name='institutions'),
-	path('nucleos/', views.nucleos, name='nucleos'),
+	
+
+	#for nucleos signin
+    path('nucleossignin/', views.nucleossignin, name='nucleossignin'),
+    
+    #for nucleos list
+    path('nucleos/', views.nucleos, name='nucleos')
 ]

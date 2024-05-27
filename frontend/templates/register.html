@@ -24,10 +24,10 @@
                 <div class="selector">
                     <div class="results {% if nucleos|length > 5 %}scroll{% endif %}">
                         {% for nucleo in nucleos %}
-                            <div class="result" title="{{ nucleo.name }}" onclick="select(this)">
-                                <div class="logo"><img src="{% static nucleo.logo %}" alt=""></div>
-                                <div>{{ nucleo.short }}</div>
-                                <input type="hidden" value="{{ nucleo.id }}">
+                            <div class="result" title="{{ nucleo }}" onclick="select(this)">
+                                <!-- <div class="logo"><img src="{% static nucleo.logo %}" alt=""></div> -->
+                                <div>{{ nucleo }}</div>
+                                <!-- <input type="hidden" value="{{ nucleo.id }}"> -->
                             </div>
                         {% endfor %}
                     </div>
