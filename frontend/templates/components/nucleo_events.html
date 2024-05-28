@@ -1,0 +1,84 @@
+<div class="user_events">
+    <div class="container">
+        <div class="event-card">
+            <div class="event-icon">
+                <img src="/static/images/calendar.png" alt="Calendar Icon" style="width: 50px;"> <!-- Make sure to replace with the correct image path -->
+            </div>
+            <div class="event-details">
+                <h3>Evento 1</h3>
+                <p>Descrição do evento 1</p>
+                <p>Localização: Local 1</p>
+                <p>Data: 01/01/2021</p>
+            </div>
+            <div class="event-actions">
+                <!-- <button class="btn green">Inscrito</button> -->
+                <span class="participants">10 Participantes</span>
+                <div class="event-cost">
+                    <span>5€</span>
+                    <span>10 Pontos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="new-event">
+            <div class="content">
+                <span>+</span>
+            </div>
+        </div>
+    </div>
+            
+
+    <div id="forms"> 
+        <div class="title">
+            <div class="yellow"></div>
+            <h1>Criar um Evento</h1>
+        </div>
+        <form class="form">
+            <input type="text" id="title" name="title" placeholder="Título" required>
+
+            <select id="type" name="type" placeholder="Tipo de Evento" required>
+                <option value="">Selecione o tipo de evento</option>
+                <option value="1">Palestra</option>
+                <option value="2">Workshop</option>
+                <option value="3">Convivio</option>
+                <option value="4">Taça UA</option>
+            </select>
+
+            <input type="text" id="location" name="location" placeholder="Localização">
+
+            <input id="description" name="description" placeholder="Descrição"></input>
+
+            <input type="date" id="date" name="date" placeholder="Data" required>
+
+            <input type="text" id="cost" name="cost" placeholder="€">
+
+            <input type="text" id="points" name="points" placeholder="Pontos">
+
+            <div class="buttons">
+                <button type="submit" class="btn primary">Criar</button>
+            </div>
+            <div class= "buttons"> 
+                <button type="button" class="btn secondary" onclick="closeForm();">Cancelar</button>  
+            </div>
+        </form>
+    </div>
+    <!-- here for testing ONLY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var newEvents = document.querySelectorAll('.new-event'); // Select all .new-event elements
+            var forms = document.getElementById('forms');
+
+            newEvents.forEach(function(event) { // Iterate over each .new-event element
+                event.addEventListener('click', function() { // Attach click event to each element
+                    forms.style.display = forms.style.display === 'none' ? 'block' : 'none'; // Toggle display
+                });
+            });
+        });
+
+        function closeForm() {
+            var forms = document.getElementById('forms');
+            forms.style.display = 'none'; // Hide the form
+        }
+    </script>
+</div>
