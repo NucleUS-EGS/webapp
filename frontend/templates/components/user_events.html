@@ -1,97 +1,72 @@
 <div class="user_events">
-    <div class="container">
-        <div class="new-event">
-            <div class="content">
-                <span class="show">+</span>
+    <div class="event-card">
+        <div class="event-details">
+            <div class="new-event">
+                <div class="content">
+                    <span>+</span>
+                </div>
             </div>
-        </div>
-        <div class="new-event">
-            <div class="content">
-                <span>+</span>
+            {% for event in events %}
+            <div class="event">
+                <div>
+                    <div class="name">{{ event.name }}</div>
+                    <div class="description">{{ event.description }}</div>
+                </div>
+                <div class="info">
+                    <div><b>Localização:</b> {{ event.location }}</div>
+                    <div><b>Data:</b> {{ event.date }}</div>
+                </div>
+                <div class="cost">
+                    <div><b>Custo:</b> {{ event.price }}€</div>
+                    <div><b>Pontos:</b> {{ event.points }}</div>
+                </div>
             </div>
+            {% endfor %}
         </div>
-        <div class="new-event">
-            <div class="content">
-                <span>+</span>
-            </div>
-        </div>
-        <div class="new-event">
-            <div class="content">
-                <span>+</span>
-            </div>
-        </div>
-       
-        <!-- <div class="event">
-            
-        </div> -->
     </div>
-    <div id="forms"> 
+
+    <div id="forms" style="display: none;"> 
         <div class="title">
             <div class="yellow"></div>
             <h1>Criar um Evento</h1>
         </div>
-        <form class="form">
-            <label for="title">Título *</label>
-            <input type="text" id="title" name="title" required>
+        <form class="form" action="/api/v1/events/" method="POST">
+            <input type="text" id="title" name="title" placeholder="Título" required>
 
-            <label for="type">Tipo de evento *</label>
-            <select id="type" name="type" required>
+            <select id="type" name="type" placeholder="Tipo de Evento" required>
                 <option value="">Selecione o tipo de evento</option>
+                <option value="1">Palestra</option>
+                <option value="2">Workshop</option>
+                <option value="3">Convivio</option>
+                <option value="4">Taça UA</option>
             </select>
 
-            <label for="location">Localização</label>
-            <input type="text" id="location" name="location">
+            <input type="text" id="location" name="location" placeholder="Localização">
 
-            <label for="description">Descrição</label>
-            <textarea id="description" name="description"></textarea>
+            <input type="text" id="description" name="description" placeholder="Descrição"></input>
 
-            <div class="timing"> 
-                <label for="date">Data *</label>
-                <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="date" placeholder="Data" required>
 
-                <label for="startTime">Hora de início *</label>
-                <input type="time" id="startTime" name="startTime" required>
+            <input type="text" id="price" name="price" placeholder="€">
 
-                <label for="endTime">Hora de fim *</label>
-                <input type="time" id="endTime" name="endTime" required>
-            </div>
-          
-            <div class="inscrições">
-                <label for="limit">Limite de inscrições</label>
-                <input type="number" id="limit" name="limit" value="50">
-
-            </div>
-
-            <div class="row">
-                
-                <label for="cost">Custo</label>
-                <input type="text" id="cost" name="cost" placeholder="€">
-
-                <label for="points">Pontos</label>
-                <input type="text" id="points" name="points" placeholder="Pontos">
-            </div>
+            <input type="text" id="points" name="points" placeholder="Pontos">
 
             <div class="buttons">
                 <button type="submit" class="btn primary">Criar</button>
-                <button type="button" class="btn secondary" onclick="window.history.back();">Cancelar</button>
+                <button type="button" class="btn secondary" onclick="closeForm();">Cancelar</button>  
             </div>
         </form>
     </div>
-</div>
-
-
-<!-- here for testing ONLY -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var show = document.querySelector('.show'); 
-        var forms = document.getElementById('forms'); 
-    
-        show.addEventListener('click', function() {
-            if (forms.style.display === 'none') {
-                forms.style.display = 'block'; 
-            } else {
-                forms.style.display = 'none';
+    <!-- here for testing ONLY -->
+    <script>
+        document.addEventListener('click', e => {
+            if (e.target.closest(".new-event")) {
+                document.getElementById("forms").style.removeProperty("display");
             }
         });
-    });
+
+        function closeForm() {
+            document.getElementById("forms").style.display = "none";
+        }
     </script>
+</div>

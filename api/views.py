@@ -21,6 +21,7 @@ import app.settings as settings
 from .models import Institution
 from django.forms.models import model_to_dict
 
+logging.basicConfig(level=logging.DEBUG,format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
 def build_url_redirect(request, service, path):
@@ -79,29 +80,49 @@ def register(request):
 	return Response(response.json(), status=response.status_code)
 
 @api_view(['GET'])
+@swagger_auto_schema(method='get', manual_parameters=[
+    openapi.Parameter('query', openapi.IN_QUERY, description='Query string', type=openapi.TYPE_STRING),
+    openapi.Parameter('page', openapi.IN_QUERY, description='Page number', type=openapi.TYPE_INTEGER),
+    openapi.Parameter('date_from', openapi.IN_QUERY, description='Date from', type=openapi.TYPE_STRING),
+    openapi.Parameter('date_to', openapi.IN_QUERY, description='Date to', type=openapi.TYPE_STRING),
+])
+
+@api_view(['GET', 'POST', 'PATCH', 'DELETE'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def events(request):
 	url = build_url(request, settings.EVENTS_SERVICE_URL, '/events')
-	if request.method == 'GET':
-		response = requests.get(url, params=request.query_params, headers={
-			'API_KEY': settings.EVENTS_SERVICE_KEY
-		})
-		return Response(response.json(), status=response.status_code)
-	
-@api_view(['POST', 'PATCH', 'DELETE'])
-@permission_classes((IsAuthenticatedOrReadOnly,))
-@csrf_exempt
-def events_edit(request, event_id):
-	url = build_url(request, settings.EVENTS_SERVICE_URL, f'/events/{event_id}')
 	headers = {
 		'API_KEY': settings.EVENTS_SERVICE_KEY,
+		'Content-Type': 'application/json'
 	}
-	if request.method == 'POST':
-		response = requests.post(url, data=json.loads(request.body), headers=headers)
+	
+	if request.method == 'GET':
+		response = requests.get(url, headers=headers)
 		return Response(response.json(), status=response.status_code)
+	elif request.method == 'POST':
+		data = {
+			'name': request.POST.get('title'),
+			'description': request.POST.get('description'),
+			'date': request.POST.get('date'),
+			'location': request.POST.get('location'),
+			'price': request.POST.get('price'),
+			'type': request.POST.get('type'),
+			'points': request.POST.get('points')
+		}
+
+		logger.debug("Data: %s", data)
+
+		headers['Content-Type'] = 'application/json' 
+		response = requests.post(url, json=data, headers=headers)
+		if response.status_code == 201:
+			return HttpResponseRedirect('/')
+		else:
+			return Response(response.json(), status=response.status_code)
+		
 	elif request.method == 'PATCH':
-		response = requests.patch(url, data=json.loads(request.body), headers=headers)
+		headers['Content-Type'] = 'application/json' 
+		response = requests.patch(url, data=request.POST.dict(), headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'DELETE':
 		response = requests.delete(url, headers=headers)
