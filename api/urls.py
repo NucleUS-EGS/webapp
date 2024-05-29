@@ -6,6 +6,12 @@ urlpatterns = [
 	# login
 	path('auth/', views.auth, name='auth'),
 
+	# for nucleos signin
+    path('nucleossignin/', views.nucleossignin, name='nucleossignin'),
+    
+	# register
+    path('register/', views.register, name='register'),
+    
 	# user info
 	path('user/', views.user, name='user'),
 
@@ -22,10 +28,8 @@ urlpatterns = [
 	# internal
 	path('institutions/', views.institutions, name='institutions'),
 	
-
-	#for nucleos signin
-    path('nucleossignin/', views.nucleossignin, name='nucleossignin'),
-    
-    #for nucleos list
+	# nucleos students
+ 	path('students/<int:nucleo_id>/', views.nucleo_students, name='nucleo_students'),
+    # for nucleos list
     path('nucleos/', views.nucleos, name='nucleos')
 ]

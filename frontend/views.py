@@ -3,6 +3,10 @@ from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 
 import requests
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 import app.settings as settings
 
@@ -12,13 +16,22 @@ def build_url(request, service, path):
 
 def check_login(request):
 	# get cookie value for AUTH_SERVICE_EMAIL
-	mail = request.COOKIES.get('AUTH_SERVICE_EMAIL', None)
-	username = request.COOKIES.get('AUTH_SERVICE_USERNAME', None)
 	step = request.COOKIES.get('AUTH_SERVICE_STEP', None)
-	id = request.COOKIES.get('AUTH_SERVICE_ID')
-	points = get_points(request)
+	token = request.COOKIES.get('AUTH_SERVICE_ACCESS_TOKEN', None)
+	points = get_points(request)	
+
+
+	if token:
+		user = get_user(request, token)
+		logger.debug(f"user: {user}")
+
+		if user and not 'error' in user:
+			return {'id': user["id"], 'mail': user["email"], 'username': user["email"].split("@")[0], 'step': step, 'points': points, 'nucleo': user["nucleo"], 'user': user}
 	
-	return {'mail': mail, 'username': username, 'step': step, 'id': id, 'points': points}
+	student_nucleo = request.COOKIES.get('NUCLEO', None)
+	mail = request.COOKIES.get('AUTH_SERVICE_EMAIL', None)
+	return {'mail': mail, 'step': step, 'points': points, 'id': id, 'student_nucleo': student_nucleo}
+
 
 def index(request):
 	context = check_login(request)
@@ -30,9 +43,7 @@ def index(request):
 		return HttpResponseRedirect('/register')
 	
 
-	nucleo = request.COOKIES.get('NUCLEO', None)
-	if nucleo:
-		context['nucleo'] = nucleo
+	
 	# get user id where email = mail
 	return render(request, 'index.html', context)
 	
@@ -58,11 +69,13 @@ def login(request):
 				response = response.json()
 				nucleo_email = response.get('email')
 				nucleo = nucleo_email.split('@')[0].upper()
+				nucleo_id = response.get('id')
 
 				
 				response = HttpResponseRedirect('/')
 				response.set_cookie('AUTH_SERVICE_EMAIL', nucleo_email)
 				response.set_cookie('AUTH_SERVICE_STEP', 'loggedin')
+				response.set_cookie('NUCLEO_ID', nucleo_id)
 				response.set_cookie('NUCLEO', nucleo)
 				
 				return response
@@ -96,7 +109,6 @@ def register(request):
 
 		# nucleos = requests.get(build_url(request, settings.API_URL, '/nucleos')).json()
 		context['nucleos'] = get_nucleos(request)
-		print(context)
 		return render(request, 'register.html', context)
 	
 
@@ -106,6 +118,7 @@ def logout(request):
 	response.delete_cookie('AUTH_SERVICE_STEP')
 	response.delete_cookie('AUTH_SERVICE_ACCESS_TOKEN')
 	response.delete_cookie('AUTH_SERVICE_ID')
+	response.delete_cookie('AUTH_SERVICE_USERNAME')
 	response.delete_cookie('NUCLEO') 
 	return response
 
@@ -117,9 +130,21 @@ def standings(request):
 	return render(request, 'standings.html', context)
 
 
-def get_points(request):
+def students(request):
+	context = check_login(request)
+	nucleo_id = request.COOKIES.get('NUCLEO_ID', None)
+	students_data = get_nucleo_students(request, nucleo_id)
 
-	id = request.COOKIES.get('AUTH_SERVICE_ID')
+	context['students'] = [
+	{"email": student["email"], "points": get_points(request, student["id"]), "id": student["id"]}
+	for student in students_data["users"]
+	]
+
+	return render(request, 'students.html', context)
+
+
+def get_points(request, id=None):
+
 	if id:
 		url = build_url(request, settings.API_URL, f'/entity/?entity_id={id}')
 		response = requests.get(url).json()
@@ -147,3 +172,18 @@ def get_nucleos(request):
 	return nucleos
 
 
+def get_user(request, token):
+	url = build_url(request, settings.API_URL, f'/user?access_token={token}')
+	response = requests.get(url).json()
+
+	return response
+
+# returns the users bellonging to that nucleo
+
+def get_nucleo_students(request, nucleo_id):
+
+
+	url = build_url(request, settings.API_URL, f'/students/{nucleo_id}')
+	response = requests.get(url).json()
+	
+	return response

@@ -10,6 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 import requests
 import base64 
 import re
+import json
 
 import logging
 from django.conf import settings
@@ -20,7 +21,7 @@ import app.settings as settings
 from .models import Institution
 from django.forms.models import model_to_dict
 
-
+logger = logging.getLogger(__name__)
 
 def build_url_redirect(request, service, path):
 	scheme = request.META.get('HTTP_X_FORWARDED_PROTO', 'http')
@@ -50,8 +51,8 @@ def auth(request):
 @permission_classes((AllowAny,))
 @csrf_exempt
 def user(request):
-	token = request.headers.get('Authorization')
-	url = build_url(request, settings.AUTH_SERVICE_URL, '/user')
+	token = request.query_params.get('access_token')
+	url = build_url(request, settings.AUTH_SERVICE_URL, '/user?access_token=' + token)
 	response = requests.get(url, headers={
 		'API_KEY': settings.AUTH_SERVICE_KEY,
 		'Authorization': token
@@ -59,12 +60,24 @@ def user(request):
 	return Response(response.json(), status=response.status_code)
 
 
-@swagger_auto_schema(method='get', manual_parameters=[
-    openapi.Parameter('query', openapi.IN_QUERY, description='Query string', type=openapi.TYPE_STRING),
-    openapi.Parameter('page', openapi.IN_QUERY, description='Page number', type=openapi.TYPE_INTEGER),
-    openapi.Parameter('date_from', openapi.IN_QUERY, description='Date from', type=openapi.TYPE_STRING),
-    openapi.Parameter('date_to', openapi.IN_QUERY, description='Date to', type=openapi.TYPE_STRING),
-])
+# @swagger_auto_schema(method='get', manual_parameters=[
+#     openapi.Parameter('query', openapi.IN_QUERY, description='Query string', type=openapi.TYPE_STRING),
+#     openapi.Parameter('page', openapi.IN_QUERY, description='Page number', type=openapi.TYPE_INTEGER),
+#     openapi.Parameter('date_from', openapi.IN_QUERY, description='Date from', type=openapi.TYPE_STRING),
+#     openapi.Parameter('date_to', openapi.IN_QUERY, description='Date to', type=openapi.TYPE_STRING),
+# ])
+
+#register page
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def register(request):
+	url = build_url(request, settings.AUTH_SERVICE_URL, '/register')
+	response = requests.post(url, json=json.loads(request.body.decode('utf-8')), headers={
+		'API_KEY': settings.AUTH_SERVICE_KEY,
+	})
+	return Response(response.json(), status=response.status_code)
+
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 @csrf_exempt
@@ -85,10 +98,10 @@ def events_edit(request, event_id):
 		'API_KEY': settings.EVENTS_SERVICE_KEY,
 	}
 	if request.method == 'POST':
-		response = requests.post(url, data=request.data, headers=headers)
+		response = requests.post(url, data=json.loads(request.body), headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'PATCH':
-		response = requests.patch(url, data=request.data, headers=headers)
+		response = requests.patch(url, data=json.loads(request.body), headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'DELETE':
 		response = requests.delete(url, headers=headers)
@@ -113,7 +126,7 @@ def points(request):
 		response = requests.get(url, params=request.query_params, headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'PATCH':
-		response = requests.patch(url, data=request.data, headers=headers)
+		response = requests.patch(url, data=json.loads(request.body), headers=headers)
 		return Response(response.json(), status=response.status_code)
 
 @api_view(['GET'])
@@ -158,7 +171,7 @@ def nucleos(request):
 def nucleossignin(request):
 
 	url = build_url(request, settings.AUTH_SERVICE_URL, '/signin')
-	response = requests.post(url, json=request.data, headers={
+	response = requests.post(url, json=json.loads(request.body), headers={
 		'API_KEY': settings.AUTH_SERVICE_KEY,
 		'Content-Type': 'application/json'
 	})
@@ -169,3 +182,15 @@ def nucleossignin(request):
 
 	return Response(response_data, status=response.status_code)
     
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+@csrf_exempt
+def nucleo_students(request, nucleo_id):
+	# make get request to auth service /nucleos
+	url = build_url(request, settings.AUTH_SERVICE_URL, f'/students?nucleo_id={nucleo_id}')
+	response = requests.get(url, headers={
+		'API_KEY': settings.AUTH_SERVICE_KEY
+	})
+	return Response(response.json(), status=response.status_code)
+

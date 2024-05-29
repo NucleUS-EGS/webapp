@@ -1,9 +1,13 @@
 <div class="sidebar">
 	<div class="title">Eventos dos núcleos</div>
 	<div class="tabs">
-		<div><a href="#">Inscrições</a></div>
-		<div><a href="#">Meu Núcleo</a></div>
-		<div><a href="#">Todos</a></div>
+		{% if student_nucleo %}
+			<div><a href="/students">Estudantes</a></div>
+		{% else %}
+			<div><a href="#">Inscrições</a></div>
+			<div><a href="#">Meu Núcleo</a></div>
+			<div><a href="#">Todos</a></div>
+		{% endif %}
 	</div>
 	<div class="filter">
 		<div>Filtro</div>

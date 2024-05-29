@@ -8,24 +8,25 @@
     <div class="links">
         {% if mail %}
 			{% if step == 'loggedin' %}
-            <a href="/">Home</a>
-            <a href="/standings">Classificações</a>
-            <a href="/help">Ajuda</a>
-            <div class="user">
-                {% if nucleo %}
-                <div class="profile">
-                    <span>{{ nucleo }}</span>
+                <a href="/">Home</a>
+                <a href="/standings">Classificações</a>
+                <a href="/help">Ajuda</a>
+                <div class="user">
+                    {% if student_nucleo %}
+                    <div class="profile">
+                        <span>{{ student_nucleo }}</span>
+                    </div>
+                    {% else %}
+                    <div class="points">
+                        <img src="{% static 'images/nucleus-logo.png' %}" alt="">
+                        <span>{{ points }}</span>
+                    </div>
+                    <div class="profile">
+                        <span>{{ username }}</span>
+                    </div>
+                    <span>{{nucleo}}</span>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div class="points">
-                    <img src="{% static 'images/nucleus-logo.png' %}" alt="">
-                    <span>{{ points }}</span>
-                </div>
-                <div class="profile">
-                    <span>{{ mail }}</span>
-                </div>
-                {% endif %}
-            </div>
             {% endif %}
         {% else %}
             <a href="/login">Entrar</a>

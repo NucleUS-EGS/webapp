@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>NucleUS</title>
+
+	{% include 'components/head.html' %}
+
+	<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+	<link rel="stylesheet" href="{% static 'css/standings.css' %}">
+</head>
+<body>
+	{% include 'components/navbar.html' %}
+
+	{% include 'components/sidebar.html' %}
+
+	{% include 'components/students.html' %}
+
+</body>
+</html>
