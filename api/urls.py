@@ -11,7 +11,7 @@ urlpatterns = [
 
 	# events
 	#path('events/', views.events, name='events'),
-	path('events/', views.events_edit, name='events'),
+	path('events/', views.events, name='events'),
 
 	# points
 	path('entity/', views.points, name='entity'),

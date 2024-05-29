@@ -1,40 +1,31 @@
 <div class="user_events">
-    <div class="container">
-        <div class="event-card">
-            <div class="event-icon">
-                <img src="/static/images/calendar.png" alt="Calendar Icon" style="width: 50px;"> <!-- Make sure to replace with the correct image path -->
-            </div>
-            <div class="event-details">
-                {% for event in events %}
-                    <div class="container">
-                        <h1>{{ event.title }}</h1>
-                        <p>{{ event.description }}</p>
-                        <p>Localização: {{ event.location }}</p>
-                        <p>Data: {{ event.date }}</p>
-                        <!-- <p>Custo: {{ event.price }}€</p> -->
-                        <p>Pontos: {{ event.points }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-            <!-- <div class="event-actions"> -->
-                <!-- <button class="btn green">Inscrito</button> -->
-                <!-- <span class="participants">10 Participantes</span>
-                <div class="event-cost">
-                    <span>5€</span>
-                    <span>10 Pontos</span>
+    <div class="event-card">
+        <div class="event-details">
+            <div class="new-event">
+                <div class="content">
+                    <span>+</span>
                 </div>
-            </div> -->
-        </div>
-    </div>
-    <div class="container">
-        <div class="new-event">
-            <div class="content">
-                <span>+</span>
             </div>
+            {% for event in events %}
+            <div class="event">
+                <div>
+                    <div class="name">{{ event.name }}</div>
+                    <div class="description">{{ event.description }}</div>
+                </div>
+                <div class="info">
+                    <div><b>Localização:</b> {{ event.location }}</div>
+                    <div><b>Data:</b> {{ event.date }}</div>
+                </div>
+                <div class="cost">
+                    <div><b>Custo:</b> {{ event.price }}€</div>
+                    <div><b>Pontos:</b> {{ event.points }}</div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <div id="forms"> 
+    <div id="forms" style="display: none;"> 
         <div class="title">
             <div class="yellow"></div>
             <h1>Criar um Evento</h1>
@@ -58,32 +49,24 @@
 
             <input type="text" id="price" name="price" placeholder="€">
 
-            <!-- <input type="text" id="points" name="points" placeholder="Pontos"> -->
+            <input type="text" id="points" name="points" placeholder="Pontos">
 
             <div class="buttons">
                 <button type="submit" class="btn primary">Criar</button>
-            </div>
-            <div class= "buttons"> 
                 <button type="button" class="btn secondary" onclick="closeForm();">Cancelar</button>  
             </div>
         </form>
     </div>
     <!-- here for testing ONLY -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var newEvents = document.querySelectorAll('.new-event'); // Select all .new-event elements
-            var forms = document.getElementById('forms');
-
-            newEvents.forEach(function(event) { // Iterate over each .new-event element
-                event.addEventListener('click', function() { // Attach click event to each element
-                    forms.style.display = forms.style.display === 'none' ? 'block' : 'none'; // Toggle display
-                });
-            });
+        document.addEventListener('click', e => {
+            if (e.target.closest(".new-event")) {
+                document.getElementById("forms").style.removeProperty("display");
+            }
         });
 
         function closeForm() {
-            var forms = document.getElementById('forms');
-            forms.style.display = 'none'; // Hide the form
+            document.getElementById("forms").style.display = "none";
         }
     </script>
 </div>

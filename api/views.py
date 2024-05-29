@@ -66,28 +66,21 @@ def user(request):
     openapi.Parameter('date_from', openapi.IN_QUERY, description='Date from', type=openapi.TYPE_STRING),
     openapi.Parameter('date_to', openapi.IN_QUERY, description='Date to', type=openapi.TYPE_STRING),
 ])
-@api_view(['GET'])
+
+@api_view(['GET', 'POST', 'PATCH', 'DELETE'])
 @permission_classes((AllowAny,))
 @csrf_exempt
 def events(request):
-	url = build_url(request, settings.EVENTS_SERVICE_URL, '/events')
-	if request.method == 'GET':
-		response = requests.get(url, params=request.query_params, headers={
-			'API_KEY': settings.EVENTS_SERVICE_KEY
-		})
-		return Response(response.json(), status=response.status_code)
-	
-@api_view(['POST', 'PATCH', 'DELETE'])
-@permission_classes((AllowAny,))
-@csrf_exempt
-def events_edit(request):
 	url = build_url(request, settings.EVENTS_SERVICE_URL, '/events')
 	headers = {
 		'API_KEY': settings.EVENTS_SERVICE_KEY,
 		'Content-Type': 'application/json'
 	}
-	#print("Request Method:", request.method)
-	if request.method == 'POST':
+	
+	if request.method == 'GET':
+		response = requests.get(url, headers=headers)
+		return Response(response.json(), status=response.status_code)
+	elif request.method == 'POST':
 		data = {
 			'name': request.POST.get('title'),
 			'description': request.POST.get('description'),
@@ -95,13 +88,18 @@ def events_edit(request):
 			'location': request.POST.get('location'),
 			'price': request.POST.get('price'),
 			'type': request.POST.get('type'),
+			'points': request.POST.get('points')
 		}
 
 		logger.debug("Data: %s", data)
 
 		headers['Content-Type'] = 'application/json' 
 		response = requests.post(url, json=data, headers=headers)
-		return Response(response.json(), status=response.status_code)
+		if response.status_code == 201:
+			return HttpResponseRedirect('/')
+		else:
+			return Response(response.json(), status=response.status_code)
+		
 	elif request.method == 'PATCH':
 		headers['Content-Type'] = 'application/json' 
 		response = requests.patch(url, data=request.POST.dict(), headers=headers)
