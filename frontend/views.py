@@ -34,6 +34,7 @@ def index(request):
 	if nucleo:
 		context['nucleo'] = nucleo
 	# get user id where email = mail
+	context["events"] = requests.get(build_url(request, settings.API_URL, '/events')).json()
 	return render(request, 'index.html', context)
 	
 
