@@ -20,7 +20,8 @@ import app.settings as settings
 from .models import Institution
 from django.forms.models import model_to_dict
 
-
+logging.basicConfig(level=logging.DEBUG,format='%(levelname)s: %(message)s')
+logger = logging.getLogger(__name__)
 
 def build_url_redirect(request, service, path):
 	scheme = request.META.get('HTTP_X_FORWARDED_PROTO', 'http')
@@ -77,18 +78,33 @@ def events(request):
 		return Response(response.json(), status=response.status_code)
 	
 @api_view(['POST', 'PATCH', 'DELETE'])
-@permission_classes((IsAuthenticatedOrReadOnly,))
+@permission_classes((AllowAny,))
 @csrf_exempt
-def events_edit(request, event_id):
-	url = build_url(request, settings.EVENTS_SERVICE_URL, f'/events/{event_id}')
+def events_edit(request):
+	url = build_url(request, settings.EVENTS_SERVICE_URL, '/events')
 	headers = {
 		'API_KEY': settings.EVENTS_SERVICE_KEY,
+		'Content-Type': 'application/json'
 	}
+	#print("Request Method:", request.method)
 	if request.method == 'POST':
-		response = requests.post(url, data=request.data, headers=headers)
+		data = {
+			'name': request.POST.get('title'),
+			'description': request.POST.get('description'),
+			'date': request.POST.get('date'),
+			'location': request.POST.get('location'),
+			'price': request.POST.get('price'),
+			'type': request.POST.get('type'),
+		}
+
+		logger.debug("Data: %s", data)
+
+		headers['Content-Type'] = 'application/json' 
+		response = requests.post(url, json=data, headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'PATCH':
-		response = requests.patch(url, data=request.data, headers=headers)
+		headers['Content-Type'] = 'application/json' 
+		response = requests.patch(url, data=request.POST.dict(), headers=headers)
 		return Response(response.json(), status=response.status_code)
 	elif request.method == 'DELETE':
 		response = requests.delete(url, headers=headers)

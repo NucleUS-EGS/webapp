@@ -5,6 +5,7 @@
                 <img src="/static/images/calendar.png" alt="Calendar Icon" style="width: 50px;"> <!-- Make sure to replace with the correct image path -->
             </div>
             <div class="event-details">
+<<<<<<< HEAD
                 <h3>Evento 1</h3>
                 <p>Descrição do evento 1</p>
                 <p>Localização: Local 1</p>
@@ -13,21 +14,54 @@
             <div class="event-actions">
                 <!-- <button class="btn green">Inscrito</button> -->
                 <span class="participants">10 Participantes</span>
+=======
+                {% for event in events %}
+                    <div class="container">
+                        <h1>{{ event.title }}</h1>
+                        <p>{{ event.description }}</p>
+                        <p>Localização: {{ event.location }}</p>
+                        <p>Data: {{ event.date }}</p>
+                        <!-- <p>Custo: {{ event.price }}€</p> -->
+                        <p>Pontos: {{ event.points }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- <div class="event-actions"> -->
+                <!-- <button class="btn green">Inscrito</button> -->
+                <!-- <span class="participants">10 Participantes</span>
+>>>>>>> aux-branch
                 <div class="event-cost">
                     <span>5€</span>
                     <span>10 Pontos</span>
                 </div>
+<<<<<<< HEAD
             </div>
         </div>
     </div>
             
+=======
+            </div> -->
+        </div>
+    </div>
+    <div class="container">
+        <div class="new-event">
+            <div class="content">
+                <span>+</span>
+            </div>
+        </div>
+    </div>
+>>>>>>> aux-branch
 
     <div id="forms"> 
         <div class="title">
             <div class="yellow"></div>
             <h1>Criar um Evento</h1>
         </div>
+<<<<<<< HEAD
         <form class="form">
+=======
+        <form class="form" action="/api/v1/events/" method="POST">
+>>>>>>> aux-branch
             <input type="text" id="title" name="title" placeholder="Título" required>
 
             <select id="type" name="type" placeholder="Tipo de Evento" required>
@@ -40,6 +74,7 @@
 
             <input type="text" id="location" name="location" placeholder="Localização">
 
+<<<<<<< HEAD
             <input id="description" name="description" placeholder="Descrição"></input>
 
             <input type="date" id="date" name="date" placeholder="Data" required>
@@ -47,6 +82,15 @@
             <input type="text" id="cost" name="cost" placeholder="€">
 
             <input type="text" id="points" name="points" placeholder="Pontos">
+=======
+            <input type="text" id="description" name="description" placeholder="Descrição"></input>
+
+            <input type="date" id="date" name="date" placeholder="Data" required>
+
+            <input type="text" id="price" name="price" placeholder="€">
+
+            <!-- <input type="text" id="points" name="points" placeholder="Pontos"> -->
+>>>>>>> aux-branch
 
             <div class="buttons">
                 <button type="submit" class="btn primary">Criar</button>
@@ -74,4 +118,8 @@
             forms.style.display = 'none'; // Hide the form
         }
     </script>
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> aux-branch
